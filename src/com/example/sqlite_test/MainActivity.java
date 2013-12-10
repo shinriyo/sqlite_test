@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,12 +25,15 @@ public class MainActivity extends Activity {
         entryButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	Log.d("MyApp", "insert");
+            	
                 String name = nameText.getText().toString();
                 String age = ageText.getText().toString();
                 ContentValues insertValues = new ContentValues();
                 insertValues.put("name", name);
                 insertValues.put("age", age);
                 long id = db.insert("person", name, insertValues);
+                Log.d("MyApp", "id=" + id);
             }
         });
 
@@ -37,28 +41,35 @@ public class MainActivity extends Activity {
         updateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+            	Log.d("MyApp", "update");
+            	
                 String name = nameText.getText().toString();
                 String age = ageText.getText().toString();
+                
                 if (name.equals("")) {
+                	Toast.makeText(MainActivity.this, "名前を入力してください。", Toast.LENGTH_SHORT).show();
+                } else {
                     ContentValues updateValues = new ContentValues();
                     updateValues.put("age", age);
-                    db.update("person", updateValues, "name=?", new String[] { name });
-                } else {
-                    Toast.makeText(MainActivity.this, "名前を入力してください。", Toast.LENGTH_SHORT).show();
+                    db.update("person", updateValues, "name=?", new String[] { name });                    
                 }
             }
         });
  
         Button deleteButton = (Button) findViewById(R.id.delete);
         deleteButton.setOnClickListener(new OnClickListener() {
-        	
             @Override
             public void onClick(View v) {
-                if (nameText.equals("")) {
-                    String name = nameText.getText().toString();
-                    db.delete("person", "name=?", new String[] { name });
+            	Log.d("MyApp", "delete");
+            	
+                String name = nameText.getText().toString();
+                
+                //if (nameText.equals("")) {
+                    //String name = nameText.getText().toString();
+                if (name.equals("")) {
+                	Toast.makeText(MainActivity.this, "名前を入力してください。", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "名前を入力してください。", Toast.LENGTH_SHORT).show();
+                    db.delete("person", "name=?", new String[] { name });
                 }
             }
         });
@@ -67,17 +78,20 @@ public class MainActivity extends Activity {
         deleteAllButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = nameText.getText().toString();
-                String age = ageText.getText().toString();
+            	Log.d("MyApp", "delete all");
+            	
+                //String name = nameText.getText().toString();
+                //String age = ageText.getText().toString();
                 db.delete("person", null, null);
             }
         });
 
         Button detaBaseButton = (Button) findViewById(R.id.dataBase);
         detaBaseButton.setOnClickListener(new OnClickListener() {
-
         	@Override
             public void onClick(View v) {
+        		Log.d("MyApp", "show");
+        		
                 Intent dbIntent = new Intent(MainActivity.this, ShowDataBase.class);
                 startActivity(dbIntent);
             }
